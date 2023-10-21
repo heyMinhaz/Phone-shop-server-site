@@ -39,7 +39,12 @@ app.get("/phones", async (req, res) => {
   const result = await phonesCollection.find().toArray();
   res.send(result);
 });
+    app.get("/brand/:name", async (req, res) => {
+  const name =req.params.name
 
+      console.log(name);
+     
+});
 
     app.post("/phones", async (req, res) => {
       const data = req.body;
