@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5001;
 
@@ -37,8 +37,51 @@ await client.connect();
 
 app.get("/phones", async (req, res) => {
   const result = await phonesCollection.find().toArray();
-  res.send(result);
+  res.send(result); 
 });
+    
+    
+    // update
+    
+app.get("/phones/:_id", async (req, res) => {
+  const id = req.params._id;
+  const query = {_id: new ObjectId(id) }
+  const result = await phonesCollection.findOne(query)
+  res.send(result);
+
+
+});
+    
+    
+    app.put('/phones/:_id', async (req, res) => {
+      
+      const id = req.params._id;
+      const filter = { _id: new ObjectId(id) }
+      const options = { upsert: true };
+      const updatePhone = req.body;
+      
+      const phone =
+      
+      {
+        $set: {
+          name: updatePhone.name,
+          Price: updatePhone.Price,
+          brandname: updatePhone.brandname,
+          type: updatePhone.type,
+          rating: updatePhone.rating,
+          textarea: updatePhone.textarea,
+          photourl: updatePhone.photourl,
+        },
+      };
+
+      const result = await phonesCollection.updateOne(filter, phone, options)
+      
+      res.send(result);
+
+    })
+    
+    
+    
     app.get("/brand/:name", async (req, res) => {
   const name =req.params.name
 
